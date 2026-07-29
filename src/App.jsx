@@ -107,19 +107,19 @@ export default function App() {
               </h1>
             </Card>
         
-              <Card className="hidden md:block md:col-start-5 md:row-start-1 md:col-span-3 md:row-span-3 bg-third/35 rounded-lg p-10 text-center">
+              <Card className="hidden md:block md:col-start-5 md:row-start-1 md:col-span-3 md:row-span-3 rounded-lg p-10 text-center">
                 <h1 className="text-white text-2xl font-semibold">
                   Current Focus
                 </h1>
               </Card>
             
-            <Card className="hidden md:block md:col-start-1 md:row-start-4 md:col-span-3 md:row-span-3 bg-third/35 rounded-lg p-10 text-center">
+            <Card className="hidden md:block md:col-start-1 md:row-start-4 md:col-span-3 md:row-span-3 rounded-lg p-10 text-center">
               <h1 className="text-white text-2xl font-semibold">
                 My Tech Stack & Tools
               </h1>
             </Card>
 
-            <Card className="hidden md:block md:col-start-4 md:row-start-4 md:col-span-4 md:row-span-3 bg-third/35 rounded-lg p-10 text-center">
+            <Card className="hidden md:block md:col-start-4 md:row-start-4 md:col-span-4 md:row-span-3 rounded-lg p-10 text-center">
               <h1 className="text-white text-2xl font-semibold">
                 Interest / Hobby
               </h1>
