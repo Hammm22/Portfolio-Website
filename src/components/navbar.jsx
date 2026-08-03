@@ -1,21 +1,41 @@
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import Glass from './Glass.jsx';
+gsap.registerPlugin(ScrollTrigger);
 export default function Navbar() {
+  const [active, setActive] = useState('home');
   const navRef = useRef(null);
 
-  useGSAP(()=>{
-    gsap.from(navRef.current,{
-      y:-100,
-      opacity:0,
-      duration:1,
-      ease:"power3.out",
-      delay:0.2
+  const navLinks = [
+    { id: 'home', label: 'Home' },
+    { id: 'about', label: 'About Me' },
+    { id: 'achievements', label: 'Achievements' },
+    { id: 'projects', label: 'Projects' },
+  ];
+
+  useGSAP(() => {
+    gsap.from(navRef.current, {
+      y: -100,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out',
+      delay: 0.2,
+    });
+    navLinks.forEach((link) => {
+      ScrollTrigger.create({
+        trigger: `#${link.id}`,
+        start: 'top 50%',
+        end: 'bottom 50%',
+        onToggle: (self) => {
+          if (self.isActive) {
+            setActive(link.id);
+          }
+        },
+      });
     });
   });
-
-
 
   return (
     <nav ref={navRef} className="fixed top-6 w-full flex justify-center z-50">
@@ -30,46 +50,20 @@ export default function Navbar() {
         mixBlendMode="screen"
       >
         <ul className="w-full h-full flex flex-row justify-evenly items-center px-2 md:px-4 gap-1 md:gap-4">
-          <li>
-            <a
-              href="#home" // 3. Ganti href sesuai ID section di App.jsx
-              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
-            >
-              Home
-            </a>
-          </li>
-          <li>
-            <a
-              href="#about" // Pastikan kamu menambahkan id="about" di section 2
-              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
-            >
-              About Me
-            </a>
-          </li>
-          <li>
-            <a
-              href="#achievements" // Pastikan kamu menambahkan id="achievements" di section 3
-              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
-            >
-              Achievements
-            </a>
-          </li>
-          <li>
-            <a
-              href="#projects" // Mengarah ke id="projects" di section 4
-              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
-            >
-              Projects
-            </a>
-          </li>
-          <li>
-            <a
-              href="#contact"
-              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
-            >
-              Contact
-            </a>
-          </li>
+          {navLinks.map((link) => (
+            <li key={link.id} className="relative">
+              <a
+                href={`#${link.id}`}
+                className={`text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold transition-all duration-300 ${active === link.id ? 'text-secondary' : 'text-third hover:text-secondary'}`}
+              >
+                {link.label}
+              </a>
+
+              <span
+                className={`absolute left-0 -bottom-1 h-[2px] bg-secondary transition-all duration-300 ${active === link.id ? 'w-full' : 'w-0'}`}
+              ></span>
+            </li>
+          ))}
         </ul>
       </Glass>
     </nav>

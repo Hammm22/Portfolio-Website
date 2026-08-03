@@ -1,6 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import gsap from 'gsap';
+import Lenis from 'lenis';
 import { useGSAP } from '@gsap/react';
 import './index.css';
 import Glass from './components/Glass.jsx';
@@ -8,14 +9,13 @@ import Navbar from './components/navbar.jsx';
 import Dotbg from './components/bg.jsx';
 import Card from './components/card.jsx';
 import BounceCards from './components/BounceCard.jsx';
-
+import pdfUrls from './data/Certificates.js'
 const Projects = [
   {
     id: 1,
     name: 'web1',
     stack: 'Laravel, TailwindCSS, React',
     description: 'test description',
-    // Perbaikan: Tambahkan https://
     github: 'https://github.com/Hammm22',
   },
   {
@@ -41,23 +41,46 @@ const Projects = [
   },
 ];
 
-const pdfUrls = [
-  'https://s3-porto-web.s3.ap-southeast-1.amazonaws.com/58f9d943-8d44-4e97-abae-841cc569a483.pdf',
-  'https://s3-porto-web.s3.ap-southeast-1.amazonaws.com/b706fe14-ff9b-4860-9580-d8942d7ffb60.pdf',
-  'https://s3-porto-web.s3.ap-southeast-1.amazonaws.com/b706fe14-ff9b-4860-9580-d8942d7ffb60.pdf',
-  'https://s3-porto-web.s3.ap-southeast-1.amazonaws.com/d95d5183-8ffe-4dea-8b43-c64fb897e4f2.pdf',
-];
-
 const transformStyles = [
   'rotate(0deg) translate(-70px)',
   'rotate(-5deg)',
   'rotate(5deg) translate(70px)',
   'rotate(-5deg) translate(150px)',
 ];
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const updateLenis = (time) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(updateLenis);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      lenis.destroy();
+      gsap.ticker.remove(updateLenis);
+    };
+  }, []);
+
   useGSAP(
     () => {
       gsap.from('.hero-anim', {
@@ -117,7 +140,7 @@ export default function App() {
   );
 
   return (
-    <div ref={containerRef} className=" bg-primary min-h-screen">
+    <div ref={containerRef} className="bg-primary min-h-screen">
       <Navbar />
       <main
         id="home"
@@ -202,7 +225,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Section 3: Achievements */}
       <section
         id="achievements"
         className="min-h-screen w-full flex flex-col justify-center items-center py-16 px-4 overflow-hidden"
@@ -223,7 +245,6 @@ export default function App() {
         />
       </section>
 
-      {/* Section 4: Projects */}
       <section
         id="projects"
         className="min-h-screen w-full flex flex-col justify-center py-16 px-4 md:px-8 max-w-7xl mx-auto"

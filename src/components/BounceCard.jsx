@@ -1,3 +1,4 @@
+// bounceCards.jsx
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -23,6 +24,7 @@ export default function BounceCards({
   enableHover = true,
 }) {
   const containerRef = useRef(null);
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
