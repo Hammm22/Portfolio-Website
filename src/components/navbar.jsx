@@ -1,7 +1,24 @@
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import Glass from './Glass.jsx';
-export default function navbar() {
+export default function Navbar() {
+  const navRef = useRef(null);
+
+  useGSAP(()=>{
+    gsap.from(navRef.current,{
+      y:-100,
+      opacity:0,
+      duration:1,
+      ease:"power3.out",
+      delay:0.2
+    });
+  });
+
+
+
   return (
-    <nav className="fixed top-6 w-full flex justify-center z-50">
+    <nav ref={navRef} className="fixed top-6 w-full flex justify-center z-50">
       <Glass
         displace={0.5}
         distortionScale={20}
@@ -12,43 +29,43 @@ export default function navbar() {
         borderRadius={32}
         mixBlendMode="screen"
       >
-        <ul className="w-full h-full flex flex-row justify-evenly items-center px-4">
+        <ul className="w-full h-full flex flex-row justify-evenly items-center px-2 md:px-4 gap-1 md:gap-4">
           <li>
             <a
-              href="#"
-              className="text-third text-2xl font-extrabold hover:text-secondary transition"
+              href="#home" // 3. Ganti href sesuai ID section di App.jsx
+              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
             >
               Home
             </a>
           </li>
           <li>
             <a
-              href="#"
-              className="text-third text-2xl font-extrabold hover:text-secondary transition"
+              href="#about" // Pastikan kamu menambahkan id="about" di section 2
+              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
             >
               About Me
             </a>
           </li>
           <li>
             <a
-              href="#"
-              className="text-third text-2xl font-extrabold hover:text-secondary transition"
+              href="#achievements" // Pastikan kamu menambahkan id="achievements" di section 3
+              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
             >
               Achievements
             </a>
           </li>
           <li>
             <a
-              href="#"
-              className="text-third text-2xl font-extrabold hover:text-secondary transition"
+              href="#projects" // Mengarah ke id="projects" di section 4
+              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
             >
-              My Projects
+              Projects
             </a>
           </li>
           <li>
             <a
-              href="#"
-              className="text-third text-2xl font-extrabold hover:text-secondary transition"
+              href="#contact"
+              className="text-third text-xs sm:text-sm md:text-xl lg:text-2xl font-bold md:font-extrabold hover:text-secondary transition"
             >
               Contact
             </a>

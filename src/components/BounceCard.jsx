@@ -1,15 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Document, Page, pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+gsap.registerPlugin(ScrollTrigger);
 
 export default function BounceCards({
   className = '',
   pdfUrls = [],
   containerWidth = 400,
   containerHeight = 400,
-  animationDelay = 0.5,
   animationStagger = 0.06,
   easeType = 'elastic.out(1, 0.8)',
   transformStyles = [
@@ -31,12 +32,15 @@ export default function BounceCards({
           scale: 1,
           stagger: animationStagger,
           ease: easeType,
-          delay: animationDelay,
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: 'top 80%',
+          },
         },
       );
     }, containerRef);
     return () => ctx.revert();
-  }, [animationStagger, easeType, animationDelay]);
+  }, [animationStagger, easeType]);
 
   const getNoRotationTransform = (transformStr) => {
     const hasRotate = /rotate\([\s\S]*?\)/.test(transformStr);
