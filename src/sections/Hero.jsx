@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef,useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Dotbg from '../components/bg.jsx';

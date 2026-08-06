@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef,useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -23,7 +23,7 @@ export default function Projects() {
           y: 0,
           opacity: 1,
           ease: 'power3.out',
-        }
+        },
       );
 
       gsap.fromTo(
@@ -39,11 +39,15 @@ export default function Projects() {
           duration: 0.8,
           stagger: 0.2,
           ease: 'back.out(1.7)',
-        }
+        },
       );
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
+
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  }, []);
 
   return (
     <section

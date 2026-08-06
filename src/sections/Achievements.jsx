@@ -42,7 +42,9 @@ export default function Achievements() {
     },
     { scope: containerRef },
   );
-
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  }, []);
   return (
     <section
       ref={containerRef}

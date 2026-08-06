@@ -1,13 +1,15 @@
 import './index.css';
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import Navbar from './components/navbar.jsx';
 import Hero from './sections/Hero.jsx';
-import About from './sections/About.jsx';
-import Achievements from './sections/Achievements.jsx';
-import Projects from './sections/Projects.jsx';
+
+// PERBAIKAN: Gunakan `lazy` (huruf kecil), bukan `Lazy`
+const About = lazy(() => import('./sections/About.jsx'));
+const Achievements = lazy(() => import('./sections/Achievements.jsx'));
+const Projects = lazy(() => import('./sections/Projects.jsx'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -44,9 +46,18 @@ export default function App() {
     <div className="bg-primary min-h-screen">
       <Navbar />
       <Hero />
-      <About />
-      <Achievements />
-      <Projects />
+
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center text-white text-xl font-medium">
+            Loading Section...
+          </div>
+        }
+      >
+        <About />
+        <Achievements />
+        <Projects />
+      </Suspense>
     </div>
   );
 }

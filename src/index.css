@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: #043132 #021516;
 }
@@ -23,4 +23,9 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #064b4c;
+}
+
+.project-card,
+.about-card {
+  will-change: transform, opacity;
 }

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef,useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -23,7 +23,7 @@ export default function About() {
           y: 0,
           opacity: 1,
           ease: 'power3.out',
-        }
+        },
       );
 
       const aboutTL = gsap.timeline({
@@ -45,11 +45,14 @@ export default function About() {
           duration: 1,
           stagger: { amount: 0.6, ease: 'power2.out' },
           ease: 'back.out',
-        }
+        },
       );
     },
-    { scope: containerRef }
+    { scope: containerRef },
   );
+  useEffect(() => {
+    ScrollTrigger.refresh();
+  }, []);
 
   return (
     <section
@@ -77,8 +80,8 @@ export default function About() {
             build fluid, animated, and highly responsive user interfaces. <br />
             <br />
             Alongside that, I'm continuously expanding my back-end knowledge to
-            build robust full-stack applications. I am always eager to learn
-            new programming paradigms and application lifecycles.
+            build robust full-stack applications. I am always eager to learn new
+            programming paradigms and application lifecycles.
           </p>
         </Card>
 
