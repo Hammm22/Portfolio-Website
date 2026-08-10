@@ -5,10 +5,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import Navbar from './components/navbar.jsx';
 import Hero from './sections/Hero.jsx';
+import Footer from './sections/Footer.jsx';
 
 const About = lazy(() => import('./sections/About.jsx'));
 const Achievements = lazy(() => import('./sections/Achievements.jsx'));
 const Projects = lazy(() => import('./sections/Projects.jsx'));
+const Contact = lazy(() => import('./sections/Contact.jsx'))
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,7 +58,10 @@ export default function App() {
         <About />
         <Achievements />
         <Projects />
+        <Contact />
       </Suspense>
+      
+      <Footer />
     </div>
   );
 }
