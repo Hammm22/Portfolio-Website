@@ -1,4 +1,4 @@
-import { useRef,useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -76,12 +76,13 @@ export default function Projects() {
                 rel="noopener noreferrer"
                 className="magnetic-link inline-flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-white transition-colors duration-300"
               >
-                <h4>Link to GitHub</h4>
+                <span>Link to GitHub</span>
                 <svg
                   className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform duration-300"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-label="GitHub Link"
                 >
                   <path
                     strokeLinecap="round"

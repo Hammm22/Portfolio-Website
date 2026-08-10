@@ -60,9 +60,9 @@ export default function About() {
       id="about"
       className="min-h-screen w-full flex flex-col justify-center items-center py-16 px-4"
     >
-      <h1 className="about-title text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
+      <h2 className="about-title text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         About Me
-      </h1>
+      </h2>
       <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 auto-rows-[200px] gap-4">
         <Card className="about-card col-span-1 sm:col-span-2 md:col-start-1 md:row-start-1 md:col-span-4 md:row-span-2 rounded-2xl p-8 flex flex-col items-center justify-evenly text-center">
           <h2 className="text-secondary text-3xl font-semibold">
