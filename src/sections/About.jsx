@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import Card from '../components/card.jsx';
 import techIcons from '../data/TechIcons.jsx';
+import GithubStats from '../components/GithubStats.jsx';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -129,6 +130,8 @@ export default function About() {
           </div>
         </Card>
       </div>
+
+      <GithubStats />
     </section>
   );
 }

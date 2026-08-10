@@ -6,6 +6,7 @@ import Lenis from 'lenis';
 import Navbar from './components/navbar.jsx';
 import Hero from './sections/Hero.jsx';
 import Footer from './sections/Footer.jsx';
+import BackgroundAudio from './components/BackgroundAudio.jsx';
 
 const About = lazy(() => import('./sections/About.jsx'));
 const Achievements = lazy(() => import('./sections/Achievements.jsx'));
@@ -62,6 +63,8 @@ export default function App() {
       </Suspense>
       
       <Footer />
+
+      <BackgroundAudio />
     </div>
   );
 }

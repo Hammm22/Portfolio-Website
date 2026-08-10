@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 
 export default function Footer() {
   const [time, setTime] = useState('');
-
-  // Membuat Jam Digital Real-Time (WIB)
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
@@ -17,7 +15,7 @@ export default function Footer() {
       setTime(timeString);
     };
 
-    updateClock(); // Panggil sekali agar tidak kosong di detik pertama
+    updateClock();
     const timer = setInterval(updateClock, 1000);
 
     return () => clearInterval(timer);
