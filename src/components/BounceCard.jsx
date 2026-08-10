@@ -2,14 +2,12 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Document, Page, pdfjs } from 'react-pdf';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 gsap.registerPlugin(ScrollTrigger);
 
 export default function BounceCards({
   className = '',
-  pdfUrls = [],
+  imageUrls = [],
   containerWidth = 400,
   containerHeight = 400,
   animationStagger = 0.06,
@@ -73,7 +71,7 @@ export default function BounceCards({
     if (!enableHover || !containerRef.current) return;
 
     const q = gsap.utils.selector(containerRef);
-    pdfUrls.forEach((_, i) => {
+    imageUrls.forEach((_, i) => {
       const selector = q(`.card-${i}`);
       gsap.killTweensOf(selector);
 
@@ -108,7 +106,7 @@ export default function BounceCards({
   const resetSiblings = () => {
     if (!enableHover || !containerRef.current) return;
     const q = gsap.utils.selector(containerRef);
-    pdfUrls.forEach((_, i) => {
+    imageUrls.forEach((_, i) => {
       const selector = q(`.card-${i}`);
       gsap.killTweensOf(selector);
 
@@ -131,7 +129,7 @@ export default function BounceCards({
       }}
       ref={containerRef}
     >
-      {pdfUrls.map((src, idx) => (
+      {imageUrls.map((src, idx) => (
         <div
           key={idx}
           className={`card card-${idx} absolute w-[200px] aspect-square border-8 border-neutral-900 rounded-[30px] overflow-hidden`}
@@ -143,24 +141,12 @@ export default function BounceCards({
           onMouseLeave={resetSiblings}
         >
           <div className="w-full h-full pointer-events-none">
-            <Document
-              file={src}
-              onLoadError={(error) =>
-                console.error('PDF Load Error detail:', error.message)
-              }
-              loading={
-                <div className="w-full h-full flex items-center justify-center text-sm text-neutral-500">
-                  Loading....
-                </div>
-              }
-            >
-              <Page
-                pageNumber={1}
-                height={200}
-                renderTextLayer={false}
-                renderAnnotationLayer={false}
-              />
-            </Document>
+            <img
+              src={src}
+              alt={`Certificate ${idx + 1}`}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       ))}

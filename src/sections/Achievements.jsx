@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import BounceCards from '../components/BounceCard.jsx';
-import pdfUrls from '../data/Certificates.js';
+import imageUrls from '../data/Certificates.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,7 +56,7 @@ export default function Achievements() {
       </h2>
       <BounceCards
         className="custom-bounceCards max-w-full"
-        pdfUrls={pdfUrls}
+        imageUrls={imageUrls}
         containerWidth={500}
         containerHeight={400}
         animationDelay={0.3}
