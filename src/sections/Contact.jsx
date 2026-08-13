@@ -54,7 +54,7 @@ export default function Contact() {
     <section
       className="min-h-screen w-full flex flex-col justify-center py-16 px-4 md:px-8 max-w-5xl mx-auto bg-primary"
       ref={containerRef}
-      id="contact"
+      id="contacts"
     >
       <div className="text-center mb-16">
         <h2 className="contact-title text-white text-4xl md:text-6xl font-extrabold mb-6">

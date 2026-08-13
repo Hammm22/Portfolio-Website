@@ -31,7 +31,7 @@ export default function Achievements() {
         {
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 85%',
+            start: 'top 75%',
           },
           y: 0,
           opacity: 1,
