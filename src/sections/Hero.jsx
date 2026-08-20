@@ -29,24 +29,9 @@ export default function Hero() {
     <main
       ref={containerRef}
       id="home"
-      className="relative flex flex-col items-center justify-center min-h-screen px-4 overflow-hidden"
+      className="relative flex flex-col items-center justify-center h-full w-full px-4 overflow-hidden"
     >
-      <div className="absolute inset-0 z-0">
-        <Dotbg
-          dotRadius={3.5}
-          dotSpacing={12}
-          bulgeStrength={67}
-          glowRadius={80}
-          sparkle
-          waveAmplitude={0}
-          cursorRadius={500}
-          cursorForce={0.21}
-          bulgeOnly
-          gradientFrom="#043132"
-          gradientTo="#aaddf1"
-          glowColor="#3ccbfff"
-        />
-      </div>
+      
 
       <div className="relative z-10 flex flex-col-reverse md:flex-row items-center justify-between gap-12 text-left text-white max-w-6xl w-full mt-20">
         <div className="flex-1 w-full text-center md:text-left">

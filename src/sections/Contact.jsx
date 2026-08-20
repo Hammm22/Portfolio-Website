@@ -16,10 +16,6 @@ export default function Contact() {
         '.contact-title',
         { y: 50, opacity: 0 },
         {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 85%',
-          },
           y: 0,
           opacity: 1,
           duration: 1,
@@ -31,10 +27,6 @@ export default function Contact() {
         '.contact-card',
         { y: 50, opacity: 0 },
         {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 80%',
-          },
           y: 0,
           opacity: 1,
           duration: 0.8,
@@ -52,7 +44,7 @@ export default function Contact() {
 
   return (
     <section
-      className="min-h-screen w-full flex flex-col justify-center py-16 px-4 md:px-8 max-w-5xl mx-auto bg-primary"
+      className="h-full w-full flex flex-col justify-center py-16 px-4 md:px-8 max-w-5xl mx-auto bg-primary"
       ref={containerRef}
       id="contacts"
     >

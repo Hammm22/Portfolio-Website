@@ -29,10 +29,6 @@ export default function Achievements() {
         '.achievement-title',
         { y: 50, opacity: 0 },
         {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 75%',
-          },
           y: 0,
           opacity: 1,
           duration: 1,
@@ -49,7 +45,7 @@ export default function Achievements() {
     <section
       ref={containerRef}
       id="achievements"
-      className="min-h-screen w-full flex flex-col justify-center items-center py-16 px-4 overflow-hidden"
+      className="h-full w-full flex flex-col justify-center items-center py-16 px-4 overflow-hidden"
     >
       <h2 className="achievement-title text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         My Achievements

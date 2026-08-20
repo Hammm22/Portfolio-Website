@@ -16,10 +16,6 @@ export default function Projects() {
         '.projects-title',
         { y: 50, opacity: 0 },
         {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 85%',
-          },
           y: 0,
           opacity: 1,
           ease: 'power3.out',
@@ -29,11 +25,7 @@ export default function Projects() {
       gsap.fromTo(
         '.project-card',
         { y: 100, opacity: 0 },
-        {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 80%',
-          },
+        { 
           y: 0,
           opacity: 1,
           duration: 0.8,
@@ -53,8 +45,8 @@ export default function Projects() {
     <section
       ref={containerRef}
       id="projects"
-      className="min-h-screen w-full flex flex-col justify-center py-16 px-4 md:px-8 max-w-7xl mx-auto"
-    >
+      data-lenis-prevent="true"
+      className="h-full w-full flex flex-col items-center pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       <h2 className="projects-title text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         My Projects
       </h2>

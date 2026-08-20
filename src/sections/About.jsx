@@ -17,10 +17,6 @@ export default function About() {
         '.about-title',
         { y: 50, opacity: 0 },
         {
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 85%',
-          },
           y: 0,
           opacity: 1,
           ease: 'power3.out',
@@ -34,7 +30,7 @@ export default function About() {
         },
       });
 
-      aboutTL.fromTo(
+      gsap.fromTo(
         '.about-card',
         { y: 100, opacity: 0, scale: 0.8, rotationX: -15 },
         {
@@ -59,7 +55,7 @@ export default function About() {
     <section
       ref={containerRef}
       id="about"
-      className="min-h-screen w-full flex flex-col justify-center items-center py-16 px-4"
+      className="h-full w-full flex flex-col justify-center items-center py-16 px-4"
     >
       <h2 className="about-title text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         About Me
