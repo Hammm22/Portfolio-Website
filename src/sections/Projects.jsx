@@ -50,7 +50,7 @@ export default function Projects() {
         {ProjectsData.map((data) => (
           <Card
             key={data.id}
-            className="project-card group relative w-full max-w-sm h-[340px] flex flex-col p-7 text-left rounded-2xl bg-white/[0.03] backdrop-blur-md border border-white/10 hover:border-secondary/50 transition-all duration-500 overflow-hidden"
+            className="project-card group relative w-full max-w-sm h-[340px] flex flex-col p-7 text-left rounded-2xl backdrop-blur-md border border-white/10 hover:border-secondary/50 transition-all duration-500 overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="flex items-center justify-between mb-6">

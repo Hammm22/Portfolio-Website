@@ -22,9 +22,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative w-full border-t border-white/10 bg-[#021819] backdrop-blur-lg py-6 px-4 md:px-8 mt-10 z-10 overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[100px] bg-secondary/20 blur-[80px] rounded-full pointer-events-none"></div>
-
+    <footer className="relative w-full border-t border-white/10 bg-neutral-900 backdrop-blur-lg py-6 px-4 md:px-8 mt-10 z-10 overflow-hidden">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs md:text-sm font-mono text-gray-500">
         
         <div className="flex items-center gap-3 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 cursor-default group hover:border-white/20 transition-all duration-300">

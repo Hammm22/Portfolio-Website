@@ -23,11 +23,13 @@ export default function About() {
       </h2>
       
       <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-7 auto-rows-[200px] gap-4">
-        <Card className="about-card col-span-1 sm:col-span-2 md:col-start-1 md:row-start-1 md:col-span-4 md:row-span-2 rounded-2xl p-8 flex flex-col items-center justify-evenly text-center bg-white/[0.03] border border-white/10">
+        {/* Card 1: Introduction */}
+        <Card className="about-card col-span-1 sm:col-span-2 md:col-start-1 md:row-start-1 md:col-span-4 md:row-span-2 rounded-2xl p-8 flex flex-col items-center justify-evenly text-center  border border-white/10">
           <h2 className="text-secondary text-3xl font-semibold">The Introduction & Background</h2>
         </Card>
 
-        <Card className="about-card col-span-1 sm:col-span-1 md:col-start-5 md:row-start-1 md:col-span-3 md:row-span-2 rounded-2xl p-8 flex flex-col justify-evenly items-center text-center bg-white/[0.03] border border-white/10">
+        {/* Card 2: Current Focus */}
+        <Card className="about-card col-span-1 sm:col-span-1 md:col-start-5 md:row-start-1 md:col-span-3 md:row-span-2 rounded-2xl p-8 flex flex-col justify-evenly items-center text-center  border border-white/10">
           <h2 className="text-secondary text-3xl font-semibold mb-2">Current Focus</h2>
           <p className="text-white text-base md:text-lg font-normal leading-relaxed">
             Currently, I am heavily focused on crafting immersive web
@@ -40,7 +42,8 @@ export default function About() {
           </p>
         </Card>
 
-        <Card className="about-card col-span-1 sm:col-span-1 md:col-start-1 md:row-start-3 md:col-span-3 md:row-span-2 rounded-2xl p-8 flex flex-col items-center justify-evenly text-center bg-white/[0.03] border border-white/10">
+        {/* Card 3: Tech Stack */}
+        <Card className="about-card col-span-1 sm:col-span-1 md:col-start-1 md:row-start-3 md:col-span-3 md:row-span-2 rounded-2xl p-8 flex flex-col items-center justify-evenly text-center  border border-white/10">
           <h2 className="text-secondary text-3xl font-semibold mb-4">My Tech Stack & Tools</h2>
           <div className="flex flex-wrap justify-center gap-3 w-full">
             {techIcons.map((tech, index) => (
@@ -52,7 +55,8 @@ export default function About() {
           </div>
         </Card>
 
-        <Card className="about-card col-span-1 sm:col-span-2 md:col-start-4 md:row-start-3 md:col-span-4 md:row-span-2 rounded-2xl p-8 flex flex-col items-center justify-evenly text-center bg-white/[0.03] border border-white/10">
+        {/* Card 4: Hobby & Games */}
+        <Card className="about-card col-span-1 sm:col-span-2 md:col-start-4 md:row-start-3 md:col-span-4 md:row-span-2 rounded-2xl p-8 flex flex-col items-center justify-evenly text-center  border border-white/10">
           <h2 className="text-secondary text-3xl font-semibold mb-4">Interest / Hobby</h2>
           <div className="text-white text-base md:text-lg font-normal">
             When I'm not writing code, usually i'm doing some hobbies like
@@ -61,7 +65,7 @@ export default function About() {
             <br />
             <br />
             The games i usually playing with is:
-            <ul className="text-centertext-left ml-8 mt-2 space-y-1">
+            <ul className="list-disc text-left ml-8 mt-2 space-y-1">
               <li>Roblox Player</li>
               <li>CarX Street</li>
               <li>PUBG Mobile</li>
