@@ -26,7 +26,8 @@ export default function App() {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
+      smoothWheel: true,
+      smoothTouch: false
     });
     lenisRef.current = lenis;
 
@@ -62,8 +63,7 @@ export default function App() {
       if (!mainRef.current) return;
 
       gsap.set('.z-container', {
-        perspective: 2000,
-        transformStyle: 'preserve-3d',
+        perspective: 2000
       });
 
       gsap.set('.z-hero', { x: 0, y: 0, z: 0, autoAlpha: 1 });
@@ -84,7 +84,6 @@ export default function App() {
         z: -2000,
         scale: 0.6,
         rotationX: 20,
-        filter: 'blur(20px)',
         autoAlpha: 0,
       });
 
@@ -112,7 +111,6 @@ export default function App() {
         .to('.z-hero', {
           z: 1500,
           autoAlpha: 0,
-          filter: 'blur(20px)',
           duration: 2,
           ease: 'sine.inOut',
         })
@@ -141,7 +139,6 @@ export default function App() {
         x: '-100vw',
         z: 500,
         autoAlpha: 0,
-        filter: 'blur(20px)',
         duration: 2,
         ease: 'sine.inOut',
       })
@@ -164,7 +161,6 @@ export default function App() {
         y: '-100vh',
         z: 500,
         autoAlpha: 0,
-        filter: 'blur(20px)',
         duration: 2,
         ease: 'sine.inOut',
       })
@@ -174,7 +170,6 @@ export default function App() {
             z: 0,
             scale: 1,
             autoAlpha: 1,
-            filter: 'blur(0px)',
             duration: 2,
             ease: 'sine.inOut',
           },
@@ -189,7 +184,6 @@ export default function App() {
         rotationX: -15,
         scale: 1.5,
         autoAlpha: 0,
-        filter: 'blur(25px)',
         duration: 2.2,
         ease: 'power2.inOut',
       })
@@ -199,7 +193,6 @@ export default function App() {
             z: 0,
             scale: 1,
             rotationX: 0,
-            filter: 'blur(0px)',
             autoAlpha: 1,
             duration: 2.2,
             ease: 'power3.out',

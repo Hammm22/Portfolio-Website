@@ -1,48 +1,15 @@
 import { useRef } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
 import Card from '../components/card.jsx';
 import ProjectsData from '../data/Projects.js';
 
 export default function Projects() {
-  const containerRef = useRef(null);
-
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        '.projects-title',
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          ease: 'power3.out',
-          duration: 0.8,
-        },
-      );
-
-      gsap.fromTo(
-        '.project-card',
-        { y: 50, opacity: 0 },
-        { 
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'back.out(1.5)',
-        },
-      );
-    },
-    { scope: containerRef },
-  );
-
   return (
     <section
-      ref={containerRef}
       id="projects"
       data-lenis-prevent="true"
-      className="h-full w-full flex flex-col items-center pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="h-full w-full flex flex-col items-center justify-center pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
-      <h2 className="projects-title text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
+      <h2 className="text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         My Projects
       </h2>
 
@@ -50,7 +17,7 @@ export default function Projects() {
         {ProjectsData.map((data) => (
           <Card
             key={data.id}
-            className="project-card group relative w-full max-w-sm h-[340px] flex flex-col p-7 text-left rounded-2xl backdrop-blur-md border border-white/10 hover:border-secondary/50 transition-all duration-500 overflow-hidden"
+            className="group relative w-full max-w-sm h-[340px] flex flex-col p-7 text-left rounded-2xl backdrop-blur-md border border-white/10 hover:border-secondary/50 transition-all duration-500 overflow-hidden"
           >
             <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="flex items-center justify-between mb-6">
@@ -61,7 +28,7 @@ export default function Projects() {
                 href={data.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="magnetic-link inline-flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-white transition-colors duration-300"
+                className="inline-flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-white transition-colors duration-300"
               >
                 <span>Link to GitHub</span>
                 <svg

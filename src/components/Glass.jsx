@@ -26,7 +26,7 @@ const GlassSurface = ({
   borderWidth = 0.07,
   brightness = 50,
   opacity = 0.93,
-  blur = 11,
+  blur = 5,
   displace = 0,
   backgroundOpacity = 0.15,
   saturation = 1,
@@ -196,7 +196,7 @@ const gaussianBlurRef = useRef(null);
       return {
         ...baseStyles,
         background: isDarkMode ? `hsl(0 0% 0% / ${backgroundOpacity})` : `hsl(0 0% 100% / ${backgroundOpacity})`,
-        backdropFilter: `blur(1.7px) url(#${filterId}) saturate(${saturation})`,
+        backdropFilter: `blur(1.4px) url(#${filterId}) saturate(${saturation})`,
         boxShadow: isDarkMode
           ? `0 0 2px 1px color-mix(in oklch, white, transparent 65%) inset,
              0 0 10px 4px color-mix(in oklch, white, transparent 85%) inset,

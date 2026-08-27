@@ -1,11 +1,7 @@
 import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
 import BounceCards from '../components/BounceCard.jsx';
 import imageUrls from '../data/Certificates.js';
 
-gsap.registerPlugin(ScrollTrigger);
 
 const transformStyles = [
   'rotate(0deg) translate(-70px)',
@@ -15,43 +11,17 @@ const transformStyles = [
 ];
 
 export default function Achievements() {
-  const containerRef = useRef(null);
-  useEffect(() => {
-    const refreshScroll = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 1000);
-    return () => clearTimeout(refreshScroll);
-  }, []);
 
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        '.achievement-title',
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: 'power3.out',
-        },
-      );
-    },
-    { scope: containerRef },
-  );
-  useEffect(() => {
-    ScrollTrigger.refresh();
-  }, []);
   return (
     <section
-      ref={containerRef}
       id="achievements"
       className="h-full w-full flex flex-col justify-center items-center py-16 px-4 overflow-hidden"
     >
-      <h2 className="achievement-title text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
+      <h2 className="text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         My Achievements
       </h2>
       <BounceCards
-        className="custom-bounceCards max-w-full"
+        className="max-w-full"
         imageUrls={imageUrls}
         containerWidth={500}
         containerHeight={400}
