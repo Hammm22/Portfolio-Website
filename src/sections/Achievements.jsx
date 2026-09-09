@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import BounceCards from '../components/BounceCard.jsx';
+import Carousel from '../components/PhotoCarousel.jsx';
 import imageUrls from '../data/Certificates.js';
 
 
@@ -20,17 +20,12 @@ export default function Achievements() {
       <h2 className="text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         My Achievements
       </h2>
-      <BounceCards
-        className="max-w-full"
-        imageUrls={imageUrls}
-        containerWidth={500}
-        containerHeight={400}
-        animationDelay={0.3}
-        animationStagger={0.13}
-        easeType="elastic.out(1, 0.5)"
-        transformStyles={transformStyles}
-        enableHover={true}
-      />
+      <Carousel items={imageUrls} 
+          cardWidth={600} 
+          cardHeight={400} 
+          autoplay={true}    
+          autoplayDelay={3000}
+          tilt={22}/>
     </section>
   );
 }
