@@ -1,32 +1,70 @@
-import { useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { FaMusic, FaVolumeMute } from 'react-icons/fa';
+import useReducedMotion from '../hooks/useReducedMotion';
+
+const preferenceKey = 'background-audio-enabled';
 
 export default function BackgroundAudio() {
+  const reducedMotion = useReducedMotion();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [resumeOnMount] = useState(() => {
+    try { return !reducedMotion && localStorage.getItem(preferenceKey) === 'true'; }
+    catch { return false; }
+  });
   const audioRef = useRef(null);
+  const playRequest = useRef(0);
+
+  const play = useCallback(() => {
+    const request = ++playRequest.current;
+    const failed = () => {
+      if (request === playRequest.current) setIsPlaying(false);
+    };
+    try { audioRef.current.play()?.catch(failed); }
+    catch { failed(); }
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    const requests = playRequest;
+    if (resumeOnMount) play();
+    return () => {
+      ++requests.current;
+      audio.pause();
+    };
+  }, [resumeOnMount, play]);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      ++playRequest.current;
+      audioRef.current.pause();
+    }
+  }, [reducedMotion]);
+
+  const stopped = () => {
+    ++playRequest.current;
+    setIsPlaying(false);
+  };
 
   const togglePlay = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch((error) => {
-        console.log('autoplay prevented:', error);
-      });
-    }
-
-    setIsPlaying(!isPlaying);
+    try { localStorage.setItem(preferenceKey, String(!isPlaying)); }
+    catch { /* Playback remains available when storage is blocked. */ }
+    if (isPlaying) audioRef.current.pause();
+    else play();
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      <audio ref={audioRef} src="/bgaudio.mp3" loop preload="auto" />
+      <audio ref={audioRef} src="/bgaudio.mp3" loop preload="none"
+        onPlay={() => setIsPlaying(true)} onPause={stopped} onError={stopped} onEnded={stopped} />
       <button
+        type="button"
         onClick={togglePlay}
         className={`group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-white/[0.05] border backdrop-blur-md transition-all duration-500 shadow-lg cursor-pointer ${isPlaying ? 'border-secondary/50 bg-secondary/10 shadow-secondary/20' : 'border-white/10 hover:border-white/30 hover:bg-white/[0.1]'}`}
         aria-label="Toggle Background Music"
+        aria-pressed={isPlaying}
       >
-        <span
-          className={`text-sm ${isPlaying ? 'text-secondary animate-bounce' : 'text-gray-400'}`}
+        <span aria-hidden="true"
+          className={`text-sm ${isPlaying ? `text-secondary ${reducedMotion ? '' : 'animate-bounce'}` : 'text-gray-400'}`}
         >
           {isPlaying ? <FaMusic /> : <FaVolumeMute />}
         </span>
@@ -35,8 +73,8 @@ export default function BackgroundAudio() {
           {isPlaying ? 'Playing Background Music' : 'Audio OFF'}
         </span>
 
-        {isPlaying && (
-          <span className="flex items-end gap-0.5 h-3">
+        {isPlaying && !reducedMotion && (
+          <span aria-hidden="true" className="flex items-end gap-0.5 h-3">
             <span className="w-0.5 bg-secondary animate-pulse h-full"></span>
             <span className="w-0.5 bg-secondary animate-pulse h-2 delay-100"></span>
             <span className="w-0.5 bg-secondary animate-pulse h-3.5 delay-200"></span>

@@ -2,13 +2,12 @@
 import { useEffect, useRef, useState, useId } from 'react';
 
 const useDarkMode = () => {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mediaQuery.matches);
 
     const handler = e => setIsDark(e.matches);
     mediaQuery.addEventListener('change', handler);
@@ -45,7 +44,6 @@ const GlassSurface = ({
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
 
-  const [svgSupported, setSvgSupported] = useState(false);
 
 const containerRef = useRef(null);
 const feImageRef = useRef(null);
@@ -136,26 +134,8 @@ const gaussianBlurRef = useRef(null);
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    const resizeObserver = new ResizeObserver(() => {
-      setTimeout(updateDisplacementMap, 0);
-    });
-
-    resizeObserver.observe(containerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
     setTimeout(updateDisplacementMap, 0);
   }, [width, height]);
-
-  useEffect(() => {
-    setSvgSupported(supportsSVGFilters());
-  }, []);
 
   const supportsSVGFilters = () => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
@@ -174,6 +154,8 @@ const gaussianBlurRef = useRef(null);
 
     return div.style.backdropFilter !== '';
   };
+
+  const [svgSupported] = useState(supportsSVGFilters);
 
   const supportsBackdropFilter = () => {
     if (typeof window === 'undefined') return false;

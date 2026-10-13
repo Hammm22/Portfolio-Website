@@ -1,14 +1,7 @@
-import { useRef, useEffect } from 'react';
 import Carousel from '../components/PhotoCarousel.jsx';
 import imageUrls from '../data/Certificates.js';
 
 
-const transformStyles = [
-  'rotate(0deg) translate(-70px)',
-  'rotate(-5deg)',
-  'rotate(5deg) translate(70px)',
-  'rotate(-5deg) translate(150px)',
-];
 
 export default function Achievements() {
 

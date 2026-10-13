@@ -1,13 +1,11 @@
-import { useRef } from 'react';
 import Card from '../components/card.jsx';
 import ContactData from '../data/Contact.jsx';
-import Footer from './Footer.jsx';
 
 export default function Contact() {
 
   return (
     <section
-      id="contacts"
+      id="contact"
       className="h-full w-full flex flex-col justify-between pt-16 px-4 md:px-8 max-w-5xl mx-auto"
     >
       <div className="w-full flex flex-col items-center">
@@ -16,9 +14,8 @@ export default function Contact() {
             Get In Touch
           </h2>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-            Currently open for new opportunities or freelance projects. Whether
-            you have a question or just want to say hi, I'll try my best to get
-            back to you!
+            I’m open to new opportunities and freelance projects. Have a project
+            in mind or a question? Feel free to get in touch.
           </p>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 place-items-center w-full mb-10">

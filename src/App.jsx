@@ -13,16 +13,19 @@ import Contact from './sections/Contact.jsx';
 import Footer from './sections/Footer.jsx';
 import BackgroundAudio from './components/BackgroundAudio.jsx';
 import Dotbg from './components/bg.jsx';
+import useReducedMotion from './hooks/useReducedMotion.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
+  const reducedMotion = useReducedMotion();
   const mainRef = useRef(null);
   const lenisRef = useRef(null);
   const tlRef = useRef(null);
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
+    if (reducedMotion) return;
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -31,12 +34,6 @@ export default function App() {
     });
     lenisRef.current = lenis;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
     lenis.on('scroll', ScrollTrigger.update);
     const updateLenis = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(updateLenis);
@@ -44,11 +41,30 @@ export default function App() {
 
     return () => {
       lenis.destroy();
+      lenisRef.current = null;
       gsap.ticker.remove(updateLenis);
     };
-  }, []);
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (!reducedMotion) return;
+    const sections = [...mainRef.current.querySelectorAll('[id]')].filter(el =>
+      ['home', 'about', 'achievements', 'projects', 'contact'].includes(el.id));
+    const updateSection = () => {
+      const current = sections.findLast(section => section.getBoundingClientRect().top <= 120);
+      setActiveSection(current?.id || 'home');
+    };
+    updateSection();
+    window.addEventListener('scroll', updateSection, { passive: true });
+    return () => window.removeEventListener('scroll', updateSection);
+  }, [reducedMotion]);
 
   const scrollToSection = (id) => {
+    if (reducedMotion) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      setActiveSection(id);
+      return;
+    }
     if (!tlRef.current || !tlRef.current.scrollTrigger) return;
     const st = tlRef.current.scrollTrigger;
 
@@ -60,7 +76,7 @@ export default function App() {
 
   useGSAP(
     () => {
-      if (!mainRef.current) return;
+      if (!mainRef.current || reducedMotion) return;
 
       gsap.set('.z-container', {
         perspective: 2000
@@ -202,17 +218,18 @@ export default function App() {
         .addLabel('contact');
 
       tl.to({}, { duration: 1 });
+      return () => { tlRef.current = null; };
     },
-    { scope: mainRef },
+    { scope: mainRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
 
   return (
     <div
       ref={mainRef}
-      className="relative h-screen w-full overflow-hidden bg-primary text-white"
+      className="portfolio-app relative h-screen w-full overflow-hidden bg-primary text-white"
     >
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <Dotbg
+        {!reducedMotion && <Dotbg
           dotRadius={3.5}
           dotSpacing={12}
           bulgeStrength={67}
@@ -225,12 +242,12 @@ export default function App() {
           gradientFrom="#043132"
           gradientTo="#aaddf1"
           glowColor="#3ccbfff"
-        />
+        />}
       </div>
       <Navbar activeSection={activeSection} onNavigate={scrollToSection} />
       <div className="z-container absolute inset-0 z-10">
         <div className="z-hero absolute inset-0 flex items-center justify-center w-full h-full will-change-transform">
-          <Hero />
+          <Hero onNavigate={scrollToSection} />
         </div>
 
         <div className="z-about absolute inset-0 flex justify-center w-full h-full will-change-transform invisible">

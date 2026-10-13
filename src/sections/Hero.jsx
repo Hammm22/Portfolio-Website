@@ -1,15 +1,17 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
+import useReducedMotion from '../hooks/useReducedMotion.js';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import Dotbg from '../components/bg.jsx';
 import Glass from '../components/Glass.jsx';
 import DecryptedText from '../components/Decrypt.jsx';
 
-export default function Hero() {
+export default function Hero({ onNavigate }) {
+  const reducedMotion = useReducedMotion();
   const containerRef = useRef(null);
 
   useGSAP(
     () => {
+      if (reducedMotion) return;
       gsap.fromTo(
         '.hero-anim',
         { y: 50, opacity: 0 },
@@ -23,7 +25,7 @@ export default function Hero() {
         },
       );
     },
-    { scope: containerRef },
+    { scope: containerRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
 
   return (
@@ -35,7 +37,7 @@ export default function Hero() {
       <div className="relative z-10 flex flex-col-reverse md:flex-row items-center justify-between gap-12 text-left text-white max-w-6xl w-full mt-20">
         <div className="flex-1 w-full text-center md:text-left">
           <h1 className="hero-anim text-4xl md:text-5xl font-lg leading-tight">
-            Hello, My name is{' '}
+            Hello, my name is{' '}
             <DecryptedText
               className="revealed font-bold text-secondary block md:inline"
               encryptedClassName="text-red-500/70 font-bold"
@@ -50,26 +52,26 @@ export default function Hero() {
           </h1>
 
           <p className="hero-anim text-xl md:text-3xl font-normal mt-4 max-w-2xl text-gray-200 mx-auto md:mx-0">
-            A high school student with a deep passion for technology. Constantly
-            learning, experimenting with code.
+            I’m a high school student who enjoys building websites, learning new
+            tools, and experimenting with code.
           </p>
 
           <div className="hero-anim mt-8 flex flex-col sm:flex-row gap-4 items-center md:items-start justify-center md:justify-start">
-            <a href="#projects">
+            <button type="button" onClick={() => onNavigate('projects')}>
               <Glass width={200} height={60}>
                 <span className="text-xl md:text-2xl font-medium hover:text-secondary transition">
                   My Projects
                 </span>
               </Glass>
-            </a>
+            </button>
 
-            <a href="#contact">
+            <button type="button" onClick={() => onNavigate('contact')}>
               <Glass width={200} height={60}>
                 <span className="text-xl md:text-2xl font-medium hover:text-secondary transition">
                   Contact Me
                 </span>
               </Glass>
-            </a>
+            </button>
           </div>
         </div>
 

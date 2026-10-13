@@ -25,6 +25,38 @@ html {
   background: #064b4c;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .portfolio-app {
+    height: auto;
+    overflow: clip;
+  }
+
+  .z-container,
+  .z-container > div {
+    position: relative;
+    inset: auto;
+    height: auto;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    perspective: none !important;
+    will-change: auto;
+  }
+
+  .z-container > div { min-height: 100svh; }
+  .z-container > div > section,
+  .z-container > div > main { height: auto; scroll-margin-top: 100px; }
+  .z-hero { padding-bottom: 3rem; }
+  .z-about > section { transform: none !important; }
+  .z-container > .z-contact { overflow: visible; }
+}
+
 .project-card,
 .about-card {
   will-change: transform, opacity;

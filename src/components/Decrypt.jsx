@@ -1,7 +1,14 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { motion } from 'motion/react';
 
-export default function DecryptedText({
+import useReducedMotion from '../hooks/useReducedMotion.js';
+
+export default function DecryptedText(props) {
+  const reducedMotion = useReducedMotion();
+  if (reducedMotion) return <span className={props.parentClassName}><span className={props.className}>{props.text}</span></span>;
+  return <DecryptedTextAnimation key={JSON.stringify([props.text, props.animateOn, props.characters, props.useOriginalCharsOnly])} {...props} />;
+}
+
+function DecryptedTextAnimation({
   text,
   speed = 50,
   maxIterations = 10,
@@ -16,7 +23,11 @@ export default function DecryptedText({
   clickMode = 'once',
   ...props
 }) {
-  const [displayText, setDisplayText] = useState(text);
+  const [displayText, setDisplayText] = useState(() => {
+    if (animateOn !== 'click') return text;
+    const chars = useOriginalCharsOnly ? [...new Set(text.replaceAll(' ', ''))] : [...characters];
+    return [...text].map(char => char === ' ' ? char : (chars[Math.floor(Math.random() * chars.length)] || char)).join('');
+  });
   const [isAnimating, setIsAnimating] = useState(false);
   const [revealedIndices, setRevealedIndices] = useState(new Set());
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -92,13 +103,6 @@ export default function DecryptedText({
     }
     return new Set(arr);
   }, []);
-
-  const encryptInstantly = useCallback(() => {
-    const emptySet = new Set();
-    setRevealedIndices(emptySet);
-    setDisplayText(shuffleText(text, emptySet));
-    setIsDecrypted(false);
-  }, [text, shuffleText]);
 
   const triggerDecrypt = useCallback(() => {
     if (sequential) {
@@ -321,17 +325,6 @@ export default function DecryptedText({
     };
   }, [animateOn, hasAnimated, triggerDecrypt]);
 
-  useEffect(() => {
-    if (animateOn === 'click') {
-      encryptInstantly();
-    } else {
-      setDisplayText(text);
-      setIsDecrypted(true);
-    }
-    setRevealedIndices(new Set());
-    setDirection('forward');
-  }, [animateOn, text, encryptInstantly]);
-
   const animateProps =
     animateOn === 'hover' || animateOn === 'inViewHover'
       ? {
@@ -345,7 +338,7 @@ export default function DecryptedText({
         : {};
 
   return (
-    <motion.span
+    <span
       ref={containerRef}
       className={`inline-block whitespace-pre-wrap ${parentClassName}`}
       {...animateProps}
@@ -364,6 +357,6 @@ export default function DecryptedText({
           );
         })}
       </span>
-    </motion.span>
+    </span>
   );
 }
