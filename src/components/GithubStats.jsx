@@ -7,11 +7,12 @@ import Card from './card';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function GithubStats() {
+export default function GithubStats({ naturalScroll = false }) {
   const containerRef = useRef(null);
 
   useGSAP(
     () => {
+      if (naturalScroll) return;
       gsap.fromTo(
         '.github-anim',
         { y: 50, opacity: 0, scale: 0.95 },
@@ -28,12 +29,12 @@ export default function GithubStats() {
         },
       );
     },
-    { scope: containerRef },
+    { scope: containerRef, dependencies: [naturalScroll], revertOnUpdate: true },
   );
 
   useEffect(() => {
-    ScrollTrigger.refresh();
-  });
+    if (!naturalScroll) ScrollTrigger.refresh();
+  }, [naturalScroll]);
   return (
     <div ref={containerRef} className="w-full max-w-6xl mx-auto mt-16 px-4">
       <Card className="github-anim w-full rounded-2xl p-6 md:p-10 flex flex-col items-center text-center border-white/10 transition-all duration-500 overflow-hidden">

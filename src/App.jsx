@@ -1,5 +1,5 @@
 import './index.css';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -13,16 +13,21 @@ import Contact from './sections/Contact.jsx';
 import Footer from './sections/Footer.jsx';
 import BackgroundAudio from './components/BackgroundAudio.jsx';
 import Dotbg from './components/bg.jsx';
+import useMediaQuery from './hooks/useMediaQuery.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const smallViewport = useMediaQuery('(max-width: 1023px), (max-height: 699px)');
+  const naturalScroll = smallViewport || reducedMotion;
   const mainRef = useRef(null);
   const lenisRef = useRef(null);
   const tlRef = useRef(null);
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
+    if (naturalScroll) return;
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -31,11 +36,7 @@ export default function App() {
     });
     lenisRef.current = lenis;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
+
 
     lenis.on('scroll', ScrollTrigger.update);
     const updateLenis = (time) => lenis.raf(time * 1000);
@@ -43,24 +44,62 @@ export default function App() {
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      lenis.destroy();
       gsap.ticker.remove(updateLenis);
+      lenis.destroy();
+      lenisRef.current = null;
     };
+  }, [naturalScroll]);
+
+  const scrollToSection = useCallback((id, updateHistory = true) => {
+    const target = document.getElementById(id);
+    if (!['home', 'about', 'achievements', 'projects', 'contact'].includes(id) || !target) return;
+    if (updateHistory && window.location.hash !== `#${id}`) {
+      window.history.pushState(null, '', `#${id}`);
+    }
+    const focusTarget = () => {
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+    };
+    const st = tlRef.current?.scrollTrigger;
+    if (st && lenisRef.current) {
+      lenisRef.current.scrollTo(st.labelToScroll(id), {
+        duration: 1.5,
+        onComplete: () => {
+          st.animation.progress(st.progress);
+          focusTarget();
+        },
+      });
+    } else {
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
+      focusTarget();
+    }
   }, []);
 
-  const scrollToSection = (id) => {
-    if (!tlRef.current || !tlRef.current.scrollTrigger) return;
-    const st = tlRef.current.scrollTrigger;
+  useEffect(() => {
+    if (!naturalScroll) return;
+    const sections = [...mainRef.current.querySelectorAll('[id]')].filter(el =>
+      ['home', 'about', 'achievements', 'projects', 'contact'].includes(el.id));
+    const update = () => {
+      const current = sections.filter(el => el.getBoundingClientRect().top <= window.innerHeight * 0.4).at(-1);
+      setActiveSection(current?.id || 'home');
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    return () => window.removeEventListener('scroll', update);
+  }, [naturalScroll]);
 
-    const targetScroll = st.labelToScroll(id);
-    if (lenisRef.current && targetScroll !== undefined) {
-      lenisRef.current.scrollTo(targetScroll, { duration: 1.5 });
-    }
+  const handleNavigation = (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const id = link.getAttribute('href').slice(1);
+    if (!document.getElementById(id)) return;
+    event.preventDefault();
+    scrollToSection(id);
   };
 
   useGSAP(
     () => {
-      if (!mainRef.current) return;
+      if (!mainRef.current || naturalScroll) return;
 
       gsap.set('.z-container', {
         perspective: 2000
@@ -202,17 +241,33 @@ export default function App() {
         .addLabel('contact');
 
       tl.to({}, { duration: 1 });
+      return () => { tlRef.current = null; };
     },
-    { scope: mainRef },
+    { scope: mainRef, dependencies: [naturalScroll], revertOnUpdate: true },
   );
+
+  useEffect(() => {
+    const followHash = () => scrollToSection(window.location.hash.slice(1) || 'home', false);
+    const frame = requestAnimationFrame(() => {
+      if (window.location.hash) followHash();
+    });
+    window.addEventListener('hashchange', followHash);
+    window.addEventListener('popstate', followHash);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('hashchange', followHash);
+      window.removeEventListener('popstate', followHash);
+    };
+  }, [scrollToSection, naturalScroll]);
 
   return (
     <div
+      onClick={handleNavigation}
       ref={mainRef}
-      className="relative h-screen w-full overflow-hidden bg-primary text-white"
+      className={`${naturalScroll ? 'natural-scroll' : ''} relative h-screen w-full overflow-hidden bg-primary text-white`}
     >
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <Dotbg
+        {!naturalScroll && <Dotbg
           dotRadius={3.5}
           dotSpacing={12}
           bulgeStrength={67}
@@ -225,20 +280,20 @@ export default function App() {
           gradientFrom="#043132"
           gradientTo="#aaddf1"
           glowColor="#3ccbfff"
-        />
+        />}
       </div>
-      <Navbar activeSection={activeSection} onNavigate={scrollToSection} />
+      <Navbar activeSection={activeSection} reducedMotion={reducedMotion} />
       <div className="z-container absolute inset-0 z-10">
         <div className="z-hero absolute inset-0 flex items-center justify-center w-full h-full will-change-transform">
-          <Hero />
+          <Hero reducedMotion={reducedMotion} />
         </div>
 
         <div className="z-about absolute inset-0 flex justify-center w-full h-full will-change-transform invisible">
-          <About />
+          <About naturalScroll={naturalScroll} />
         </div>
 
         <div className="z-achievements absolute inset-0 flex items-center justify-center w-full h-full will-change-transform invisible">
-          <Achievements />
+          <Achievements reducedMotion={reducedMotion} />
         </div>
 
         <div className="z-projects absolute inset-0 flex items-center justify-center w-full h-full will-change-transform invisible">

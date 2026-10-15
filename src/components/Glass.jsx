@@ -1,22 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useRef, useState, useId } from 'react';
-
-const useDarkMode = () => {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mediaQuery.matches);
-
-    const handler = e => setIsDark(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  return isDark;
-};
+import { useEffect, useRef, useId } from 'react';
+import useMediaQuery from '../hooks/useMediaQuery.js';
 
 const GlassSurface = ({
   children,
@@ -45,7 +29,7 @@ const GlassSurface = ({
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
 
-  const [svgSupported, setSvgSupported] = useState(false);
+
 
 const containerRef = useRef(null);
 const feImageRef = useRef(null);
@@ -54,7 +38,7 @@ const greenChannelRef = useRef(null);
 const blueChannelRef = useRef(null);
 const gaussianBlurRef = useRef(null);
 
-  const isDarkMode = useDarkMode();
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const generateDisplacementMap = () => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -153,9 +137,7 @@ const gaussianBlurRef = useRef(null);
     setTimeout(updateDisplacementMap, 0);
   }, [width, height]);
 
-  useEffect(() => {
-    setSvgSupported(supportsSVGFilters());
-  }, []);
+
 
   const supportsSVGFilters = () => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
@@ -174,6 +156,8 @@ const gaussianBlurRef = useRef(null);
 
     return div.style.backdropFilter !== '';
   };
+
+  const svgSupported = supportsSVGFilters();
 
   const supportsBackdropFilter = () => {
     if (typeof window === 'undefined') return false;

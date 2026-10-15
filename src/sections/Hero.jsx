@@ -1,15 +1,16 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import Dotbg from '../components/bg.jsx';
+
 import Glass from '../components/Glass.jsx';
 import DecryptedText from '../components/Decrypt.jsx';
 
-export default function Hero() {
+export default function Hero({ reducedMotion = false }) {
   const containerRef = useRef(null);
 
   useGSAP(
     () => {
+      if (reducedMotion) return;
       gsap.fromTo(
         '.hero-anim',
         { y: 50, opacity: 0 },
@@ -23,7 +24,7 @@ export default function Hero() {
         },
       );
     },
-    { scope: containerRef },
+    { scope: containerRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
 
   return (
@@ -36,7 +37,7 @@ export default function Hero() {
         <div className="flex-1 w-full text-center md:text-left">
           <h1 className="hero-anim text-4xl md:text-5xl font-lg leading-tight">
             Hello, My name is{' '}
-            <DecryptedText
+            {reducedMotion ? <span className="font-bold text-secondary block md:inline">Ilham Dwi Arsandy.</span> : <DecryptedText
               className="revealed font-bold text-secondary block md:inline"
               encryptedClassName="text-red-500/70 font-bold"
               text="Ilham Dwi Arsandy."
@@ -46,7 +47,7 @@ export default function Hero() {
               sequential
               useOriginalCharsOnly={false}
               animateOn="view"
-            />
+            />}
           </h1>
 
           <p className="hero-anim text-xl md:text-3xl font-normal mt-4 max-w-2xl text-gray-200 mx-auto md:mx-0">
@@ -76,10 +77,14 @@ export default function Hero() {
         <div className="hero-anim flex-1 w-full flex justify-center md:justify-end">
           <div className="relative w-64 h-64 md:w-96 md:h-96 rounded-full overflow-hidden border-4 border-white/10 bg-white/5 backdrop-blur-sm shadow-[0_0_30px_rgba(4,49,50,0.5)]">
             <img
-              src="/Photo.webp"
+              src="/Photo-768.webp"
+              srcSet="/Photo-480.webp 480w, /Photo-768.webp 768w, /Photo-1024.webp 1024w"
+              sizes="(min-width: 768px) 384px, 256px"
               alt="Ilham Dwi Arsandy"
               className="w-full h-full object-cover object-center"
               fetchPriority="high"
+              width="768"
+              height="994"
             />
           </div>
         </div>

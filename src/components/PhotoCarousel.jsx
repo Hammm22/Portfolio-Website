@@ -53,22 +53,24 @@ const DepthCarousel = ({
 
   const [active, setActive] = useState(0);
 
-  onChangeRef.current = onChange;
-  cfgRef.current = {
-    count,
-    depth,
-    spread,
-    tilt,
-    tiltDirection,
-    visibleCards,
-    falloff,
-    blur,
-    duration,
-    ease,
-    loop,
-    cardWidth,
-    autoplayDelay
-  };
+  useEffect(() => {
+    onChangeRef.current = onChange;
+    cfgRef.current = {
+      count,
+      depth,
+      spread,
+      tilt,
+      tiltDirection,
+      visibleCards,
+      falloff,
+      blur,
+      duration,
+      ease,
+      loop,
+      cardWidth,
+      autoplayDelay
+    };
+  }, [onChange, count, depth, spread, tilt, tiltDirection, visibleCards, falloff, blur, duration, ease, loop, cardWidth, autoplayDelay]);
 
   const layout = useCallback(pos => {
     const cfg = cfgRef.current;
@@ -186,8 +188,8 @@ const DepthCarousel = ({
     if (!el) return;
     const onWheel = e => {
       const cfg = cfgRef.current;
-      if (cfg.count < 2) return;
-      e.preventDefault();
+      if (cfg.count < 2 || reducedRef.current || Math.abs(e.deltaY) >= Math.abs(e.deltaX)) return;
+            e.preventDefault();
       tweenRef.current?.kill();
       const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       const delta = e.deltaMode === 1 ? raw * 24 : raw;

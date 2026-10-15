@@ -1,9 +1,9 @@
-import { useRef } from 'react';
+
 import Card from '../components/card.jsx';
 import techIcons from '../data/TechIcons.jsx';
 import GithubStats from '../components/GithubStats.jsx';
 
-export default function About() {
+export default function About({ naturalScroll = false }) {
   return (
     <section id="about" className="w-full flex flex-col items-center pt-24 pb-24 px-4">
       <h2 className="text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
@@ -60,7 +60,7 @@ export default function About() {
       </div>
 
       <div className="w-full max-w-6xl mt-4">
-        <GithubStats />
+        <GithubStats naturalScroll={naturalScroll} />
       </div>
     </section>
   );

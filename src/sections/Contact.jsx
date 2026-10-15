@@ -1,13 +1,12 @@
-import { useRef } from 'react';
+
 import Card from '../components/card.jsx';
 import ContactData from '../data/Contact.jsx';
-import Footer from './Footer.jsx';
 
 export default function Contact() {
 
   return (
     <section
-      id="contacts"
+      id="contact"
       className="h-full w-full flex flex-col justify-between pt-16 px-4 md:px-8 max-w-5xl mx-auto"
     >
       <div className="w-full flex flex-col items-center">

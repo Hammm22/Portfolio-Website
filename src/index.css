@@ -29,3 +29,79 @@ html {
 .about-card {
   will-change: transform, opacity;
 }
+
+/* ponytail: native flow on small/short screens; 3D stays desktop-only. */
+.natural-scroll {
+  height: auto;
+  min-height: 100svh;
+  overflow: clip;
+}
+
+.natural-scroll > .z-container,
+.natural-scroll .z-container > div {
+  position: relative;
+  inset: auto;
+  height: auto;
+  visibility: visible;
+  will-change: auto;
+}
+
+.natural-scroll .z-container > div {
+  display: block;
+  overflow: visible;
+}
+
+.natural-scroll #home {
+  height: auto;
+  min-height: 100svh;
+  overflow: visible;
+  padding-top: 6rem;
+  padding-bottom: 3rem;
+}
+
+.natural-scroll #home > div {
+  margin-top: 0;
+}
+
+.natural-scroll #about > .grid {
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-rows: auto;
+}
+
+.natural-scroll #about > .grid > div {
+  grid-column: auto;
+  grid-row: auto;
+  gap: 1rem;
+}
+
+.natural-scroll #projects,
+.natural-scroll #achievements,
+.natural-scroll #contact {
+  height: auto;
+  overflow: visible;
+}
+
+.natural-scroll #achievements {
+  overflow: clip;
+}
+
+.natural-scroll #contact .grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+
+.natural-scroll .z-contact {
+  padding-top: 0;
+  padding-bottom: 6rem;
+}
+
+[id] {
+  scroll-margin-top: 6rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

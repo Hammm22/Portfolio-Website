@@ -1,16 +1,8 @@
-import { useRef, useEffect } from 'react';
+
 import Carousel from '../components/PhotoCarousel.jsx';
 import imageUrls from '../data/Certificates.js';
 
-
-const transformStyles = [
-  'rotate(0deg) translate(-70px)',
-  'rotate(-5deg)',
-  'rotate(5deg) translate(70px)',
-  'rotate(-5deg) translate(150px)',
-];
-
-export default function Achievements() {
+export default function Achievements({ reducedMotion = false }) {
 
   return (
     <section
@@ -20,10 +12,10 @@ export default function Achievements() {
       <h2 className="text-white text-4xl md:text-6xl font-extrabold mb-12 text-center">
         My Achievements
       </h2>
-      <Carousel items={imageUrls} 
-          cardWidth={600} 
-          cardHeight={400} 
-          autoplay={true}    
+      <Carousel key={String(reducedMotion)} items={imageUrls}
+          cardWidth={600}
+          cardHeight={400}
+          autoplay={!reducedMotion}
           autoplayDelay={3000}
           tilt={22}/>
     </section>

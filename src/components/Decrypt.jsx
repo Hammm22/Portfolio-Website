@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { motion } from 'motion/react';
 
-export default function DecryptedText({
+export default function DecryptedText(props) {
+  return <DecryptedTextAnimation key={JSON.stringify([props.text, props.animateOn, props.characters, props.useOriginalCharsOnly])} {...props} />;
+}
+
+function DecryptedTextAnimation({
   text,
   speed = 50,
   maxIterations = 10,
@@ -16,7 +20,7 @@ export default function DecryptedText({
   clickMode = 'once',
   ...props
 }) {
-  const [displayText, setDisplayText] = useState(text);
+
   const [isAnimating, setIsAnimating] = useState(false);
   const [revealedIndices, setRevealedIndices] = useState(new Set());
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -46,6 +50,10 @@ export default function DecryptedText({
         .join('');
     },
     [availableChars]
+  );
+
+  const [displayText, setDisplayText] = useState(() =>
+    animateOn === 'click' ? shuffleText(text, new Set()) : text
   );
 
   const computeOrder = useCallback(
@@ -93,12 +101,7 @@ export default function DecryptedText({
     return new Set(arr);
   }, []);
 
-  const encryptInstantly = useCallback(() => {
-    const emptySet = new Set();
-    setRevealedIndices(emptySet);
-    setDisplayText(shuffleText(text, emptySet));
-    setIsDecrypted(false);
-  }, [text, shuffleText]);
+
 
   const triggerDecrypt = useCallback(() => {
     if (sequential) {
@@ -321,16 +324,7 @@ export default function DecryptedText({
     };
   }, [animateOn, hasAnimated, triggerDecrypt]);
 
-  useEffect(() => {
-    if (animateOn === 'click') {
-      encryptInstantly();
-    } else {
-      setDisplayText(text);
-      setIsDecrypted(true);
-    }
-    setRevealedIndices(new Set());
-    setDirection('forward');
-  }, [animateOn, text, encryptInstantly]);
+
 
   const animateProps =
     animateOn === 'hover' || animateOn === 'inViewHover'
