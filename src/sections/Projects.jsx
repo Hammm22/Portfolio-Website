@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 import Card from '../components/card.jsx';
 import ProjectsData from '../data/Projects.js';
 

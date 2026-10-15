@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 
 import Carousel from '../components/PhotoCarousel.jsx';
 import imageUrls from '../data/Certificates.js';
 
 export default function Achievements({ reducedMotion = false }) {
+=======
+import Carousel from '../components/PhotoCarousel.jsx';
+import imageUrls from '../data/Certificates.js';
+
+
+
+export default function Achievements() {
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 
   return (
     <section

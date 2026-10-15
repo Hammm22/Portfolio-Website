@@ -13,21 +13,33 @@ import Contact from './sections/Contact.jsx';
 import Footer from './sections/Footer.jsx';
 import BackgroundAudio from './components/BackgroundAudio.jsx';
 import Dotbg from './components/bg.jsx';
+<<<<<<< HEAD
 import useMediaQuery from './hooks/useMediaQuery.js';
+=======
+import useReducedMotion from './hooks/useReducedMotion.js';
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
+<<<<<<< HEAD
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const smallViewport = useMediaQuery('(max-width: 1023px), (max-height: 699px)');
   const naturalScroll = smallViewport || reducedMotion;
+=======
+  const reducedMotion = useReducedMotion();
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   const mainRef = useRef(null);
   const lenisRef = useRef(null);
   const tlRef = useRef(null);
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
+<<<<<<< HEAD
     if (naturalScroll) return;
+=======
+    if (reducedMotion) return;
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -36,18 +48,27 @@ export default function App() {
     });
     lenisRef.current = lenis;
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
     lenis.on('scroll', ScrollTrigger.update);
     const updateLenis = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(updateLenis);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+<<<<<<< HEAD
+=======
+      lenis.destroy();
+      lenisRef.current = null;
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
       gsap.ticker.remove(updateLenis);
       lenis.destroy();
       lenisRef.current = null;
     };
+<<<<<<< HEAD
   }, [naturalScroll]);
 
   const scrollToSection = useCallback((id, updateHistory = true) => {
@@ -87,6 +108,31 @@ export default function App() {
     window.addEventListener('scroll', update, { passive: true });
     return () => window.removeEventListener('scroll', update);
   }, [naturalScroll]);
+=======
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (!reducedMotion) return;
+    const sections = [...mainRef.current.querySelectorAll('[id]')].filter(el =>
+      ['home', 'about', 'achievements', 'projects', 'contact'].includes(el.id));
+    const updateSection = () => {
+      const current = sections.findLast(section => section.getBoundingClientRect().top <= 120);
+      setActiveSection(current?.id || 'home');
+    };
+    updateSection();
+    window.addEventListener('scroll', updateSection, { passive: true });
+    return () => window.removeEventListener('scroll', updateSection);
+  }, [reducedMotion]);
+
+  const scrollToSection = (id) => {
+    if (reducedMotion) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      setActiveSection(id);
+      return;
+    }
+    if (!tlRef.current || !tlRef.current.scrollTrigger) return;
+    const st = tlRef.current.scrollTrigger;
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 
   const handleNavigation = (event) => {
     const link = event.target.closest('a[href^="#"]');
@@ -99,7 +145,11 @@ export default function App() {
 
   useGSAP(
     () => {
+<<<<<<< HEAD
       if (!mainRef.current || naturalScroll) return;
+=======
+      if (!mainRef.current || reducedMotion) return;
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 
       gsap.set('.z-container', {
         perspective: 2000
@@ -243,7 +293,11 @@ export default function App() {
       tl.to({}, { duration: 1 });
       return () => { tlRef.current = null; };
     },
+<<<<<<< HEAD
     { scope: mainRef, dependencies: [naturalScroll], revertOnUpdate: true },
+=======
+    { scope: mainRef, dependencies: [reducedMotion], revertOnUpdate: true },
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   );
 
   useEffect(() => {
@@ -264,10 +318,17 @@ export default function App() {
     <div
       onClick={handleNavigation}
       ref={mainRef}
+<<<<<<< HEAD
       className={`${naturalScroll ? 'natural-scroll' : ''} relative h-screen w-full overflow-hidden bg-primary text-white`}
     >
       <div className="absolute inset-0 z-0 pointer-events-none">
         {!naturalScroll && <Dotbg
+=======
+      className="portfolio-app relative h-screen w-full overflow-hidden bg-primary text-white"
+    >
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {!reducedMotion && <Dotbg
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
           dotRadius={3.5}
           dotSpacing={12}
           bulgeStrength={67}
@@ -285,7 +346,11 @@ export default function App() {
       <Navbar activeSection={activeSection} reducedMotion={reducedMotion} />
       <div className="z-container absolute inset-0 z-10">
         <div className="z-hero absolute inset-0 flex items-center justify-center w-full h-full will-change-transform">
+<<<<<<< HEAD
           <Hero reducedMotion={reducedMotion} />
+=======
+          <Hero onNavigate={scrollToSection} />
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
         </div>
 
         <div className="z-about absolute inset-0 flex justify-center w-full h-full will-change-transform invisible">

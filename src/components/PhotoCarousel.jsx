@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import imageUrls from '../data/Certificates';
+import useReducedMotion from '../hooks/useReducedMotion';
 
 
 
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
 const normalizeItem = it => (typeof it === 'string' ? { image: it, alt: '' } : it);
+const itemLabel = item => [item?.name || item?.alt || 'Certificate', item?.year].filter(Boolean).join(' — ');
 
 const DepthCarousel = ({
   items = imageUrls,
@@ -52,7 +54,10 @@ const DepthCarousel = ({
   const reducedRef = useRef(false);
 
   const [active, setActive] = useState(0);
+  const [autoplayPaused, setAutoplayPaused] = useState(false);
+  const reducedMotion = useReducedMotion();
 
+<<<<<<< HEAD
   useEffect(() => {
     onChangeRef.current = onChange;
     cfgRef.current = {
@@ -69,6 +74,24 @@ const DepthCarousel = ({
       loop,
       cardWidth,
       autoplayDelay
+=======
+  useLayoutEffect(() => {
+    onChangeRef.current = onChange;
+    cfgRef.current = {
+    count,
+    depth,
+    spread,
+    tilt,
+    tiltDirection,
+    visibleCards,
+    falloff,
+    blur,
+    duration,
+    ease,
+    loop,
+    cardWidth,
+    autoplayDelay
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
     };
   }, [onChange, count, depth, spread, tilt, tiltDirection, visibleCards, falloff, blur, duration, ease, loop, cardWidth, autoplayDelay]);
 
@@ -82,6 +105,17 @@ const DepthCarousel = ({
     for (let i = 0; i < n; i++) {
       const el = cardRefs.current[i];
       if (!el) continue;
+
+      if (reducedRef.current) {
+        const current = i === ((Math.round(pos) % n) + n) % n;
+        el.style.transform = `translate(-50%, -50%) scale(${sc})`;
+        el.style.opacity = current ? '1' : '0';
+        el.style.filter = 'none';
+        el.style.zIndex = current ? '2000' : '0';
+        el.style.pointerEvents = current ? 'auto' : 'none';
+        if (overlayRefs.current[i]) overlayRefs.current[i].style.opacity = '0';
+        continue;
+      }
 
       let d = i - pos;
       if (cfg.loop && n > 1) {
@@ -127,6 +161,11 @@ const DepthCarousel = ({
     (target, animate) => {
       tweenRef.current?.kill();
       const cfg = cfgRef.current;
+      if (reducedRef.current || !animate) {
+        posRef.current = target;
+        layout(target);
+        return;
+      }
       const proxy = { p: posRef.current };
       const dur = animate && !reducedRef.current ? cfg.duration / 1000 : 0;
       tweenRef.current = gsap.to(proxy, {
@@ -175,13 +214,13 @@ const DepthCarousel = ({
     const ro = new ResizeObserver(entries => {
       const w = entries[0].contentRect.width;
       const cfg = cfgRef.current;
-      const needed = cfg.cardWidth + Math.abs(cfg.spread) * 2 + 120;
+      const needed = reducedRef.current ? cfg.cardWidth + 32 : cfg.cardWidth + Math.abs(cfg.spread) * 2 + 120;
       scaleRef.current = clamp(w / needed, 0.4, 1);
       layout(posRef.current);
     });
     ro.observe(root);
     return () => ro.disconnect();
-  }, [layout]);
+  }, [layout, reducedMotion]);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -193,6 +232,10 @@ const DepthCarousel = ({
       tweenRef.current?.kill();
       const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
       const delta = e.deltaMode === 1 ? raw * 24 : raw;
+      if (reducedRef.current) {
+        if (raw) setFocus(focusRef.current + Math.sign(raw), false);
+        return;
+      }
       const step = clamp(delta / (cfg.cardWidth * 0.9), -0.6, 0.6);
       posRef.current += step;
       layout(posRef.current);
@@ -251,7 +294,7 @@ const DepthCarousel = ({
     if (!drag.moved) return;
     const cfg = cfgRef.current;
     const stepPx = Math.max(cfg.cardWidth * 0.55 * scaleRef.current, 40);
-    const projected = posRef.current - (drag.v * 180) / stepPx;
+    const projected = reducedRef.current ? posRef.current : posRef.current - (drag.v * 180) / stepPx;
     setFocus(Math.round(projected), true);
   }, [setFocus]);
 
@@ -277,8 +320,8 @@ const DepthCarousel = ({
   );
 
   useEffect(() => {
-    reducedRef.current = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!autoplay || reducedRef.current || count < 2) return;
+    reducedRef.current = reducedMotion;
+    if (!autoplay || reducedMotion || count < 2 || autoplayPaused) return;
     const root = rootRef.current;
     let hovered = false;
     let focused = false;
@@ -319,7 +362,14 @@ const DepthCarousel = ({
       root?.removeEventListener('focusin', onFocusIn);
       root?.removeEventListener('focusout', onFocusOut);
     };
-  }, [autoplay, autoplayDelay, count, navigateBy]);
+  }, [autoplay, autoplayDelay, autoplayPaused, count, navigateBy, reducedMotion]);
+
+  useLayoutEffect(() => {
+    reducedRef.current = reducedMotion;
+    tweenRef.current?.kill();
+    posRef.current = focusRef.current;
+    layout(posRef.current);
+  }, [reducedMotion, layout]);
 
   useEffect(() => {
     layout(posRef.current);
@@ -338,10 +388,10 @@ const DepthCarousel = ({
     <div
       ref={rootRef}
       className={`relative flex h-full min-h-[320px] w-full cursor-grab touch-pan-y select-none items-center justify-center outline-none [perspective-origin:50%_50%] active:cursor-grabbing focus-visible:rounded-xl focus-visible:outline-2 focus-visible:outline-white/50 focus-visible:[outline-offset:4px] ${className}`.trim()}
-      style={{ perspective: `${perspective}px` }}
+      style={{ perspective: reducedMotion ? 'none' : `${perspective}px` }}
       role="group"
       aria-roledescription="carousel"
-      aria-label="Depth carousel"
+      aria-label="Certificates"
       tabIndex={0}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -349,7 +399,7 @@ const DepthCarousel = ({
       onPointerCancel={onPointerEnd}
       onKeyDown={onKeyDown}
     >
-      <div className="absolute inset-0 [transform-style:preserve-3d]" ref={stageRef}>
+      <div className="absolute inset-0" style={{ transformStyle: reducedMotion ? 'flat' : 'preserve-3d' }} ref={stageRef}>
         {data.map((item, i) => (
           <div
             key={i}
@@ -357,14 +407,15 @@ const DepthCarousel = ({
             ref={el => (cardRefs.current[i] = el)}
             style={{ width: cardWidth, height: cardHeight, borderRadius: radius }}
             aria-roledescription="slide"
-            aria-label={`${i + 1} of ${count}`}
+            role="group"
+            aria-label={`${i + 1} of ${count}: ${itemLabel(item)}`}
             aria-hidden={active !== i}
             onClick={() => onCardClick(i)}
           >
             <img
               className="block h-full w-full select-none object-cover [pointer-events:none] [-webkit-user-drag:none]"
               src={item.image}
-              alt={item.alt || ''}
+              alt={itemLabel(item)}
               draggable={false}
             />
             <span
@@ -376,11 +427,21 @@ const DepthCarousel = ({
         ))}
       </div>
 
+      <p role="status" aria-live={autoplay && !autoplayPaused && !reducedMotion ? 'off' : 'polite'} aria-atomic="true" className="absolute inset-x-4 top-2 z-[3000] text-center text-sm text-white">
+        {count ? `${active + 1} of ${count}: ${itemLabel(data[active])}` : 'No certificates'}
+      </p>
+
+      {autoplay && count > 1 && !reducedMotion && (
+        <button type="button" className="absolute right-1/2 top-10 z-[3000] min-h-[44px] min-w-[44px] translate-x-1/2 rounded border border-white/20 bg-black/50 px-3 text-sm text-white" aria-label={autoplayPaused ? 'Resume autoplay' : 'Pause autoplay'} onClick={() => setAutoplayPaused(paused => !paused)}>
+          {autoplayPaused ? 'Resume' : 'Pause'}
+        </button>
+      )}
+
       {showControls && count > 1 && (
         <>
           <button
             type="button"
-            className="absolute left-4 top-1/2 z-[3000] grid h-[42px] w-[42px] -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-[rgba(18,20,26,0.55)] text-white backdrop-blur-md transition-[background,border-color,transform] duration-200 hover:border-white/40 hover:bg-[rgba(28,31,40,0.85)] active:scale-95"
+            className="absolute left-4 top-1/2 z-[3000] grid h-[44px] w-[44px] -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-[rgba(18,20,26,0.55)] text-white backdrop-blur-md transition-[background,border-color,transform] duration-200 hover:border-white/40 hover:bg-[rgba(28,31,40,0.85)] active:scale-95"
             aria-label="Previous slide"
             onClick={() => navigateBy(-1)}
           >
@@ -397,7 +458,7 @@ const DepthCarousel = ({
           </button>
           <button
             type="button"
-            className="absolute right-4 top-1/2 z-[3000] grid h-[42px] w-[42px] -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-[rgba(18,20,26,0.55)] text-white backdrop-blur-md transition-[background,border-color,transform] duration-200 hover:border-white/40 hover:bg-[rgba(28,31,40,0.85)] active:scale-95"
+            className="absolute right-4 top-1/2 z-[3000] grid h-[44px] w-[44px] -translate-y-1/2 place-items-center rounded-full border border-white/20 bg-[rgba(18,20,26,0.55)] text-white backdrop-blur-md transition-[background,border-color,transform] duration-200 hover:border-white/40 hover:bg-[rgba(28,31,40,0.85)] active:scale-95"
             aria-label="Next slide"
             onClick={() => navigateBy(1)}
           >
@@ -417,22 +478,21 @@ const DepthCarousel = ({
 
       {showIndicators && count > 1 && (
         <div
-          className="absolute bottom-4 left-1/2 z-[3000] flex -translate-x-1/2 gap-2 rounded-full bg-[rgba(14,16,22,0.4)] px-3 py-2 backdrop-blur-sm"
-          role="tablist"
+          className="absolute bottom-4 left-1/2 z-[3000] flex max-w-[calc(100%-2rem)] flex-wrap justify-center -translate-x-1/2 gap-2 rounded-full bg-[rgba(14,16,22,0.4)] px-3 py-2 backdrop-blur-sm"
+          role="group"
           aria-label="Slides"
         >
-          {data.map((_, i) => (
+          {data.map((item, i) => (
             <button
               key={i}
               type="button"
-              role="tab"
-              aria-selected={active === i}
-              aria-label={`Go to slide ${i + 1}`}
-              className={`h-[7px] cursor-pointer rounded-full transition-[width,background] duration-[250ms] ${
-                active === i ? 'w-5 bg-white' : 'w-[7px] bg-white/30'
-              }`}
+              aria-current={active === i ? 'true' : undefined}
+              aria-label={`Go to slide ${i + 1}: ${itemLabel(item)}`}
+              className="grid h-[44px] w-[44px] shrink-0 cursor-pointer place-items-center rounded-full"
               onClick={() => setFocus(i, true)}
-            />
+            >
+              <span aria-hidden="true" className={`h-[7px] rounded-full ${active === i ? 'w-5 bg-white' : 'w-[7px] bg-white/30'}`} />
+            </button>
           ))}
         </div>
       )}

@@ -1,7 +1,14 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { motion } from 'motion/react';
+
+<<<<<<< HEAD
+export default function DecryptedText(props) {
+=======
+import useReducedMotion from '../hooks/useReducedMotion.js';
 
 export default function DecryptedText(props) {
+  const reducedMotion = useReducedMotion();
+  if (reducedMotion) return <span className={props.parentClassName}><span className={props.className}>{props.text}</span></span>;
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   return <DecryptedTextAnimation key={JSON.stringify([props.text, props.animateOn, props.characters, props.useOriginalCharsOnly])} {...props} />;
 }
 
@@ -20,7 +27,15 @@ function DecryptedTextAnimation({
   clickMode = 'once',
   ...props
 }) {
+<<<<<<< HEAD
 
+=======
+  const [displayText, setDisplayText] = useState(() => {
+    if (animateOn !== 'click') return text;
+    const chars = useOriginalCharsOnly ? [...new Set(text.replaceAll(' ', ''))] : [...characters];
+    return [...text].map(char => char === ' ' ? char : (chars[Math.floor(Math.random() * chars.length)] || char)).join('');
+  });
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   const [isAnimating, setIsAnimating] = useState(false);
   const [revealedIndices, setRevealedIndices] = useState(new Set());
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -101,8 +116,11 @@ function DecryptedTextAnimation({
     return new Set(arr);
   }, []);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   const triggerDecrypt = useCallback(() => {
     if (sequential) {
       orderRef.current = computeOrder(text.length);
@@ -324,8 +342,11 @@ function DecryptedTextAnimation({
     };
   }, [animateOn, hasAnimated, triggerDecrypt]);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   const animateProps =
     animateOn === 'hover' || animateOn === 'inViewHover'
       ? {
@@ -339,7 +360,7 @@ function DecryptedTextAnimation({
         : {};
 
   return (
-    <motion.span
+    <span
       ref={containerRef}
       className={`inline-block whitespace-pre-wrap ${parentClassName}`}
       {...animateProps}
@@ -358,6 +379,6 @@ function DecryptedTextAnimation({
           );
         })}
       </span>
-    </motion.span>
+    </span>
   );
 }

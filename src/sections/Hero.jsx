@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+<<<<<<< HEAD
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -6,6 +7,16 @@ import Glass from '../components/Glass.jsx';
 import DecryptedText from '../components/Decrypt.jsx';
 
 export default function Hero({ reducedMotion = false }) {
+=======
+import useReducedMotion from '../hooks/useReducedMotion.js';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import Glass from '../components/Glass.jsx';
+import DecryptedText from '../components/Decrypt.jsx';
+
+export default function Hero({ onNavigate }) {
+  const reducedMotion = useReducedMotion();
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   const containerRef = useRef(null);
 
   useGSAP(
@@ -36,8 +47,13 @@ export default function Hero({ reducedMotion = false }) {
       <div className="relative z-10 flex flex-col-reverse md:flex-row items-center justify-between gap-12 text-left text-white max-w-6xl w-full mt-20">
         <div className="flex-1 w-full text-center md:text-left">
           <h1 className="hero-anim text-4xl md:text-5xl font-lg leading-tight">
+<<<<<<< HEAD
             Hello, My name is{' '}
             {reducedMotion ? <span className="font-bold text-secondary block md:inline">Ilham Dwi Arsandy.</span> : <DecryptedText
+=======
+            Hello, my name is{' '}
+            <DecryptedText
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
               className="revealed font-bold text-secondary block md:inline"
               encryptedClassName="text-red-500/70 font-bold"
               text="Ilham Dwi Arsandy."
@@ -51,26 +67,26 @@ export default function Hero({ reducedMotion = false }) {
           </h1>
 
           <p className="hero-anim text-xl md:text-3xl font-normal mt-4 max-w-2xl text-gray-200 mx-auto md:mx-0">
-            A high school student with a deep passion for technology. Constantly
-            learning, experimenting with code.
+            I’m a high school student who enjoys building websites, learning new
+            tools, and experimenting with code.
           </p>
 
           <div className="hero-anim mt-8 flex flex-col sm:flex-row gap-4 items-center md:items-start justify-center md:justify-start">
-            <a href="#projects">
+            <button type="button" onClick={() => onNavigate('projects')}>
               <Glass width={200} height={60}>
                 <span className="text-xl md:text-2xl font-medium hover:text-secondary transition">
                   My Projects
                 </span>
               </Glass>
-            </a>
+            </button>
 
-            <a href="#contact">
+            <button type="button" onClick={() => onNavigate('contact')}>
               <Glass width={200} height={60}>
                 <span className="text-xl md:text-2xl font-medium hover:text-secondary transition">
                   Contact Me
                 </span>
               </Glass>
-            </a>
+            </button>
           </div>
         </div>
 

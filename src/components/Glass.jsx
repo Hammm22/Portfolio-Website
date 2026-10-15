@@ -1,6 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+<<<<<<< HEAD
 import { useEffect, useRef, useId } from 'react';
 import useMediaQuery from '../hooks/useMediaQuery.js';
+=======
+import { useEffect, useRef, useState, useId } from 'react';
+
+const useDarkMode = () => {
+  const [isDark, setIsDark] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const handler = e => setIsDark(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return isDark;
+};
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 
 const GlassSurface = ({
   children,
@@ -29,7 +49,10 @@ const GlassSurface = ({
   const redGradId = `red-grad-${uniqueId}`;
   const blueGradId = `blue-grad-${uniqueId}`;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 
 const containerRef = useRef(null);
 const feImageRef = useRef(null);
@@ -120,25 +143,14 @@ const gaussianBlurRef = useRef(null);
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
-    const resizeObserver = new ResizeObserver(() => {
-      setTimeout(updateDisplacementMap, 0);
-    });
-
-    resizeObserver.observe(containerRef.current);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
     setTimeout(updateDisplacementMap, 0);
   }, [width, height]);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
   const supportsSVGFilters = () => {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
       return false;
@@ -157,7 +169,11 @@ const gaussianBlurRef = useRef(null);
     return div.style.backdropFilter !== '';
   };
 
+<<<<<<< HEAD
   const svgSupported = supportsSVGFilters();
+=======
+  const [svgSupported] = useState(supportsSVGFilters);
+>>>>>>> dd779fa2d1a1fa974fc34d89ba0b1d2139428684
 
   const supportsBackdropFilter = () => {
     if (typeof window === 'undefined') return false;
